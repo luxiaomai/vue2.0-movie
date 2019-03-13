@@ -16,39 +16,26 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
   export default {
-    data () {
-      return {
-        loading: true,
-        title: '',
-        list: []
+    // 这里也调整通过mapGetters获取数据
+    computed: mapGetters({
+      loading: 'loading',
+      title: 'title',
+      list: 'list'
+    }),
+    props: ['movieType'],// 接收父组件传过来的值 --in_theaters=正在上映的电影  --search==搜索电影
+    mounted () {
+      // 修改后只需通过dispatch分发到对应的actions
+      if (this.movieType == 'search') {
+        this.$store.dispatch('searchMovie', this.$route.params.searchKey);
+      } else {
+        this.$store.dispatch('getInTheaters');
       }
     },
-    props: ['movieType'],// 接收来自父组件的值 in_theaters=正在上映的电影 --search=搜索电影
-    mounted(){
-      this.loadMovieList();
-    },
-    methods: {
-      loadMovieList(){
-        this.loading = true;
-        // 请求参数
-        let params = {
-          count: 18
-        },
-        // 请求路径
-        movieUrl = '/api/movie/' + this.movieType;
-        // 如果是搜索进入，新增搜索关键字参数
-        if (this.movieType == 'search') {
-          params['q'] = this.$route.params.searchKey;
-        }
-        this.$http.post(movieUrl, params).then((res) => {
-          console.log(res.data)
-          this.list = res.data.subjects;
-          this.title = res.data.title;
-          this.loading = false;
-        })
-      }
-    }
+    methods: mapActions([
+      'searchMovie'
+    ])
   }
 </script>
 

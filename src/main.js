@@ -4,7 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import axios from 'axios'
 import router from './router'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import store from  './store'
+import 'bootstrap/dist/css/bootstrap.css'
 
 // 请求绑定vue原型属性上面,方便使用
 Vue.prototype.$http = axios
@@ -13,6 +14,7 @@ Vue.prototype.$http = axios
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
